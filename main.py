@@ -31,9 +31,13 @@ def cached_ai_explain(text: str, level: str, category: str) -> str:
 @st.cache_data(show_spinner=False)
 def cached_followup(text: str, prev: str, question: str, level: str, category: str) -> str:
     try:
-        return get_followup_explanation(text, prev, question,
-                                        level=level.lower(),
-                                        category=category)
+        return get_followup_explanation(
+            text,
+            prev,
+            question,
+            level=level.lower(),
+            category=category
+        )
     except Exception as e:
         st.error(f"Follow-up failed: {e}")
         return ""
@@ -50,13 +54,13 @@ def main():
     st.title("🧾 Explain My Bill")
     st.write("Upload a PDF or image of your bill and get a plain-English breakdown, with follow-up Q&A.")
 
-    # Upload
-    uploaded = st.file_uploader("Choose file:", type=["pdf", "png", "jpg", "jpeg"])
+    # 1) Upload
+    uploaded = st.file_uploader("Choose file:", type=["pdf","png","jpg","jpeg"])
     if not uploaded:
         st.info("Waiting for you to upload a bill…")
         return
 
-    # OCR
+    # 2) OCR
     file_path = save_uploaded_file(uploaded)
     with st.spinner("Extracting text…"):
         bill_text = cached_extract_text(file_path)
@@ -64,36 +68,42 @@ def main():
         st.error("No text extracted. Try another file.")
         return
 
-    # Editable OCR text
+    # 3) Editable OCR text
     with st.expander("View & Edit Extracted Text"):
-        st.text_area("📝 Edit OCR text if needed:", value=bill_text,
-                     height=300, key="edited_text")
+        st.text_area(
+            "📝 Edit OCR text if needed:",
+            value=bill_text,
+            height=300,
+            key="edited_text"
+        )
     ocr_input = st.session_state.get("edited_text", bill_text)
 
-    # Bill category & detail level
+    # 4) Bill category & detail level
     bill_type = st.selectbox(
         "Bill category:",
-        ["Auto-detect", "Utility", "Medical", "Financial (Credit Card/Bank)",
-         "Rent/Mortgage", "Subscription", "Insurance", "Other"]
+        ["Auto-detect","Utility","Medical","Financial (Credit Card/Bank)",
+         "Rent/Mortgage","Subscription","Insurance","Other"]
     )
     detail_level = st.selectbox(
         "Explanation level:",
-        ["Brief", "Detailed"]
+        ["Brief","Detailed"]
     )
 
-    # Initial explanation
+    # 5) Initial explanation
     if st.button("🤖 Explain My Bill"):
         with st.spinner("Analyzing with AI…"):
             explanation = cached_ai_explain(ocr_input, detail_level, bill_type)
         st.session_state["initial_explanation"] = explanation
         st.subheader("💡 AI Explanation")
         st.markdown(explanation)
-        st.download_button("📥 Download Explanation",
-                           data=explanation,
-                           file_name="bill_explanation.txt",
-                           mime="text/plain")
+        st.download_button(
+            "📥 Download Explanation",
+            data=explanation,
+            file_name="bill_explanation.txt",
+            mime="text/plain"
+        )
 
-    # Follow-up Q&A
+    # 6) Follow-up Q&A
     if "initial_explanation" in st.session_state:
         st.write("---")
         st.subheader("🔄 Ask a Follow-Up Question")
