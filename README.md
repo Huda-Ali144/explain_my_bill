@@ -2,6 +2,9 @@
 
 **Explain My Bill** is a Streamlit app that helps anyone make sense of complex invoices—whether utilities, medical, credit-card, rent, insurance, or other bills. Just upload a PDF or image, correct any OCR glitches, and let Gemini AI walk you through every charge. Need more clarity? Ask follow-up questions in a built-in chat interface.
 
+## Live Link
+https://explainmybill.streamlit.app/
+
 ## Key Features
 
 - **Accurate OCR**  
