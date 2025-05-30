@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+lstm_env/
+*.env
+.streamlit/secrets.toml
+.streamlit/cache/
+uploads/
