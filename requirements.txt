@@ -1,5 +1,5 @@
 streamlit>=1.22.0
-google-generative-ai>=0.3.0
+git+https://github.com/google/generative-ai-python.git@main#egg=google-generative-ai
 easyocr>=1.6.2
 opencv-python-headless>=4.7.0.72
 pdf2image>=1.16.0
